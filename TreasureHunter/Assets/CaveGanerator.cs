@@ -115,11 +115,12 @@ public class CaveGanerator : MonoBehaviour
         {
             for (int y = 0; y < height; y++)
             {
-                if (cavePoints[x, y] == 1) // 살아있는 녀석들을..
-                {
+                //if (cavePoints[x, y] == 1) // 살아있는 녀석들을..
+                //{
                     // 그려준다
-                    Instantiate(stone, new Vector2(x, y), Quaternion.identity, trans_obj);
-                }
+                GameObject kObj = Instantiate(stone, new Vector2(x, y), Quaternion.identity, trans_obj);
+                kObj.GetComponent<SpriteRenderer>().color = cavePoints[x, y] == 1 ? Color.white : Color.black;
+                //}
             }
         }
     }
