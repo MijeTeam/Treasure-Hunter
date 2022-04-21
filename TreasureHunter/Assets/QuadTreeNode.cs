@@ -16,19 +16,4 @@ public class QuadTreeNode
 
     public QuadTreeNode parent;
     public QuadTreeNode[] childs = new QuadTreeNode[4];
-
-    //public ProvideQuadtree quadtree;
-    //public Vector2 myPosition;
-    //
-    //public void ShowMyData()
-    //{
-    //    quadtree.QuadtreeVisuality(this);
-    //    for(int i = 0; i < childs.Length; i++)
-    //    {
-    //        if(childs[i] != null)
-    //        {
-    //            childs[i].ShowMyData();
-    //        }
-    //    }
-    //}
 }

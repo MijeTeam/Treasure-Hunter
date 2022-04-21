@@ -9,20 +9,21 @@ public class ProvideQuadtree : MonoBehaviour
     [SerializeField] Transform trans_stone;
 
     StringBuilder sb = new StringBuilder();
-    QuadTreeNode rootNode = new QuadTreeNode();
+    public QuadTreeNode rootNode = new QuadTreeNode();
+
+    public int maxLevel;
 
     public string StartQuadTree(int[,] points, int startX, int startY, int size)
     {
         sb.Clear();
-        ProvidingQuadTree(points, startX, startY, size, rootNode, 0);
+
+        maxLevel = 0;
+        rootNode.status = ProvidingQuadTree(points, startX, startY, size, rootNode, 0);
+
         Debug.Log("Providing Done!");
         return sb.ToString();
     }
 
-    //public void QuadtreeVisuality(QuadTreeNode node)
-    //{
-    //    Instantiate(prefab_stone, trans_stone).transform.position = node.myPosition;
-    //}
 
     /// <summary>
     /// 쿼드 트리를 이용하여 노드를 나누어주는 함수
@@ -33,13 +34,11 @@ public class ProvideQuadtree : MonoBehaviour
     /// <param name="size">N*N 검색 범위 사이즈</param>
     /// <param name="node">QuadTree 데이터를 저장할 노드</param>
     /// <param name="level">몇단계까지 진행했나</param>
-    /// <param name="pos">노드의 비주얼 표시 위치</param>
     /// <returns></returns>
     private E_NODESTATUS ProvidingQuadTree(int[,] points, int startX, int startY, int size, QuadTreeNode node, int level)
     {
+        if (level > maxLevel) maxLevel = level;
         node.level = level;
-        //node.quadtree = this;
-        //node.myPosition = pos;
 
         bool isCombined = true; // 병합 가능한가?
         int startStatus = points[startX, startY]; // 제일 처음 시작하는 곳을 기준으로 잡음
