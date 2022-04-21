@@ -2,6 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum E_TILEALIVE
+{
+    DEAD = 0,
+    ALIVE = 1
+}
+
 public class CaveGanerator : MonoBehaviour
 {
     [SerializeField] ProvideQuadtree quadtree;
@@ -72,12 +78,12 @@ public class CaveGanerator : MonoBehaviour
                     if (neighboringWalls > threshold)
                     {
                         // 난 살아있다!
-                        cavePoints[x, y] = 1;
+                        cavePoints[x, y] = (int)E_TILEALIVE.ALIVE;
                     }
                     else if (neighboringWalls < threshold)
                     {
                         // 이웃의 벽이 목표치보다 적으면 죽음
-                        cavePoints[x, y] = 0;
+                        cavePoints[x, y] = (int)E_TILEALIVE.DEAD;
                     }
                 }
             }
@@ -96,7 +102,7 @@ public class CaveGanerator : MonoBehaviour
                 {
                     if (x != pointX || y != pointY)
                     {
-                        if (cavePoints[x, y] == 1)
+                        if (cavePoints[x, y] == (int)E_TILEALIVE.ALIVE)
                         {
                             wallNeighbors++;
                         }
@@ -118,7 +124,7 @@ public class CaveGanerator : MonoBehaviour
             for (int y = 0; y < height; y++)
             {
                 GameObject kObj = Instantiate(stone, new Vector2(x, y), Quaternion.identity, trans_obj);
-                kObj.GetComponent<SpriteRenderer>().color = cavePoints[x, y] == 1 ? Color.white : Color.black;
+                kObj.GetComponent<SpriteRenderer>().color = cavePoints[x, y] == (int)E_TILEALIVE.ALIVE ? Color.white : Color.black;
             }
         }
     }

@@ -13,7 +13,6 @@ public class ProvideQuadtree : MonoBehaviour
     public void StartQuadTree(int[,] points, int startX, int startY, int size)
     {
         rootNode.status = ProvidingQuadTree(points, startX, startY, size, rootNode, 0);
-        Debug.Log("Providing Done!");
     }
 
     /// <summary>
@@ -51,7 +50,7 @@ public class ProvideQuadtree : MonoBehaviour
 
         if(isCombined) // 병합 가능할 경우
         {
-            return startStatus == 1 ? E_NODESTATUS.COMBINED_1 : E_NODESTATUS.COMBINED_0;
+            return startStatus == (int)E_TILEALIVE.ALIVE ? E_NODESTATUS.COMBINED_ALIVE : E_NODESTATUS.COMBINED_DEAD;
         }
 
         // 아닐경우 4분할
