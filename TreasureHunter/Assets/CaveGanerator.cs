@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class CaveGanerator : MonoBehaviour
 {
+    [SerializeField] ProvideQuadtree quadtree;
     [SerializeField] Transform trans_obj;
 
     public int width; // 가로길이
@@ -27,6 +28,7 @@ public class CaveGanerator : MonoBehaviour
     void Start()
     {
         PlaceGrid();
+        Debug.Log(quadtree.StartQuadTree(cavePoints, 0, 0, width));
     }
 
     private void GenerateCave()
@@ -123,6 +125,11 @@ public class CaveGanerator : MonoBehaviour
                 //}
             }
         }
+    }
+
+    public void ProvidingQuad()
+    {
+
     }
 
     ///

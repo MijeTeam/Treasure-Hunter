@@ -131,6 +131,7 @@ GameObject:
   m_Component:
   - component: {fileID: 237936111}
   - component: {fileID: 237936112}
+  - component: {fileID: 237936113}
   m_Layer: 0
   m_Name: RandomGenerator
   m_TagString: Untagged
@@ -164,6 +165,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29d2be56fca28ad42b931d43e5ef26cd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  quadtree: {fileID: 237936113}
   trans_obj: {fileID: 292169431}
   width: 80
   height: 80
@@ -171,6 +173,18 @@ MonoBehaviour:
   randFillPercent: 46
   threshold: 4
   stone: {fileID: 1049526844}
+--- !u!114 &237936113
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 237936110}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cf045bf5913dca24d827f345e453a353, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &292169430
 GameObject:
   m_ObjectHideFlags: 0
