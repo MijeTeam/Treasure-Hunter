@@ -5,25 +5,16 @@ using System.Text;
 
 public class ProvideQuadtree : MonoBehaviour
 {
-    [SerializeField] GameObject prefab_stone;
+    [SerializeField] GameObject prefab_visual;
     [SerializeField] Transform trans_stone;
 
-    StringBuilder sb = new StringBuilder();
-    public QuadTreeNode rootNode = new QuadTreeNode();
+    QuadTreeNode rootNode = new QuadTreeNode();
 
-    public int maxLevel;
-
-    public string StartQuadTree(int[,] points, int startX, int startY, int size)
+    public void StartQuadTree(int[,] points, int startX, int startY, int size)
     {
-        sb.Clear();
-
-        maxLevel = 0;
         rootNode.status = ProvidingQuadTree(points, startX, startY, size, rootNode, 0);
-
         Debug.Log("Providing Done!");
-        return sb.ToString();
     }
-
 
     /// <summary>
     /// 쿼드 트리를 이용하여 노드를 나누어주는 함수
@@ -37,7 +28,6 @@ public class ProvideQuadtree : MonoBehaviour
     /// <returns></returns>
     private E_NODESTATUS ProvidingQuadTree(int[,] points, int startX, int startY, int size, QuadTreeNode node, int level)
     {
-        if (level > maxLevel) maxLevel = level;
         node.level = level;
 
         bool isCombined = true; // 병합 가능한가?
@@ -61,13 +51,11 @@ public class ProvideQuadtree : MonoBehaviour
 
         if(isCombined) // 병합 가능할 경우
         {
-            sb.Append(startStatus);
             return startStatus == 1 ? E_NODESTATUS.COMBINED_1 : E_NODESTATUS.COMBINED_0;
         }
 
         // 아닐경우 4분할
         int halfSize = (int)(size * 0.5f);
-        sb.Append("{");
         for(int i = 0; i < 4; i++)
         {
             node.childs[i] = new QuadTreeNode();
@@ -77,7 +65,6 @@ public class ProvideQuadtree : MonoBehaviour
         node.childs[1].status = ProvidingQuadTree(points, startX + halfSize, startY, halfSize, node.childs[1], level + 1);
         node.childs[2].status = ProvidingQuadTree(points, startX, startY + halfSize, halfSize, node.childs[2], level + 1);
         node.childs[3].status = ProvidingQuadTree(points, startX + halfSize, startY + halfSize, halfSize, node.childs[3], level + 1);
-        sb.Append("}");
 
         return E_NODESTATUS.NOT_COMBINED;
     }

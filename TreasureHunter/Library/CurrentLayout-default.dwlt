@@ -148,8 +148,13 @@ MonoBehaviour:
   m_MinSize: {x: 201, y: 442}
   m_MaxSize: {x: 4001, y: 8042}
   vertical: 1
+<<<<<<< Updated upstream
   controlID: 67
 --- !u!114 &7
+=======
+  controlID: 55
+--- !u!114 &4
+>>>>>>> Stashed changes
 MonoBehaviour:
   m_ObjectHideFlags: 52
   m_CorrespondingSourceObject: {fileID: 0}
@@ -170,7 +175,11 @@ MonoBehaviour:
     height: 947
   m_MinSize: {x: 276, y: 71}
   m_MaxSize: {x: 4001, y: 4021}
+<<<<<<< Updated upstream
   m_ActualView: {fileID: 18}
+=======
+  m_ActualView: {fileID: 14}
+>>>>>>> Stashed changes
   m_Panes:
   - {fileID: 18}
   m_Selected: 0
@@ -429,9 +438,15 @@ MonoBehaviour:
   m_SceneHierarchy:
     m_TreeViewState:
       scrollPos: {x: 0, y: 0}
+<<<<<<< Updated upstream
       m_SelectedIDs: 
       m_LastClickedID: 0
       m_ExpandedIDs: 2efbfffff0330000f4330000fe330000
+=======
+      m_SelectedIDs: d6330000
+      m_LastClickedID: 13270
+      m_ExpandedIDs: 6afbffffc4330000d2330000e0330000e4330000ee330000
+>>>>>>> Stashed changes
       m_RenameOverlay:
         m_UserAcceptedRename: 0
         m_Name: 
@@ -532,7 +547,11 @@ MonoBehaviour:
     m_SkipHidden: 0
     m_SearchArea: 1
     m_Folders:
+<<<<<<< Updated upstream
     - Assets/Scenes
+=======
+    - Assets/Resources/Prefabs
+>>>>>>> Stashed changes
   m_ViewMode: 0
   m_StartGridSize: 64
   m_LastFolders: []
@@ -544,7 +563,11 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: c25e0000
     m_LastClickedID: 24258
+<<<<<<< Updated upstream
     m_ExpandedIDs: 00000000163400003e340000403400004234000044340000
+=======
+    m_ExpandedIDs: 000000000634000032340000343400003634000038340000
+>>>>>>> Stashed changes
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -572,7 +595,11 @@ MonoBehaviour:
     scrollPos: {x: 0, y: 0}
     m_SelectedIDs: 
     m_LastClickedID: 0
+<<<<<<< Updated upstream
     m_ExpandedIDs: ffffffff00000000163400003e340000403400004234000044340000
+=======
+    m_ExpandedIDs: ffffffff00000000063400003234000034340000363400003834000012350000f6360000
+>>>>>>> Stashed changes
     m_RenameOverlay:
       m_UserAcceptedRename: 0
       m_Name: 
@@ -756,9 +783,15 @@ MonoBehaviour:
   m_PlayAudio: 0
   m_AudioPlay: 0
   m_Position:
+<<<<<<< Updated upstream
     m_Target: {x: -13.709748, y: 44.49539, z: -101.64636}
     speed: 2
     m_Value: {x: -13.709748, y: 44.49539, z: -101.64636}
+=======
+    m_Target: {x: 8.727554, y: 41.994244, z: -207.6544}
+    speed: 2
+    m_Value: {x: 10.12753, y: 42.272594, z: -207.5931}
+>>>>>>> Stashed changes
   m_RenderMode: 0
   m_CameraMode:
     drawMode: 0
@@ -808,9 +841,15 @@ MonoBehaviour:
     speed: 2
     m_Value: {x: 0, y: 0, z: 0, w: 1}
   m_Size:
+<<<<<<< Updated upstream
     m_Target: 53.48329
     speed: 2
     m_Value: 53.48329
+=======
+    m_Target: 14.233326
+    speed: 2
+    m_Value: 13.620408
+>>>>>>> Stashed changes
   m_Ortho:
     m_Target: 1
     speed: 2
