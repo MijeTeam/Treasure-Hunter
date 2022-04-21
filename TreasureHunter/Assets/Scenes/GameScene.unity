@@ -169,11 +169,7 @@ MonoBehaviour:
   trans_obj: {fileID: 292169431}
   width: 80
   height: 80
-<<<<<<< Updated upstream
-  smoothCycles: 5
-=======
   smoothCycles: 6
->>>>>>> Stashed changes
   randFillPercent: 45
   threshold: 4
   stone: {fileID: 4855631914025427955, guid: 74d1d852a38c7104bafd4a70a04c94ff, type: 3}
@@ -482,10 +478,6 @@ Transform:
   - {fileID: 237936111}
   - {fileID: 292169431}
   - {fileID: 594178111}
-<<<<<<< Updated upstream
-  - {fileID: 1049526845}
-=======
->>>>>>> Stashed changes
   - {fileID: 2118469461}
   m_Father: {fileID: 1101165900}
   m_RootOrder: 0
@@ -647,9 +639,5 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 815743003}
-<<<<<<< Updated upstream
   m_RootOrder: 4
-=======
-  m_RootOrder: 3
->>>>>>> Stashed changes
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
