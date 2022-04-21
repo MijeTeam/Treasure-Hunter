@@ -167,10 +167,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   quadtree: {fileID: 237936113}
   trans_obj: {fileID: 292169431}
-  width: 20
-  height: 20
-  smoothCycles: 6
-  randFillPercent: 50
+  width: 80
+  height: 80
+  smoothCycles: 5
+  randFillPercent: 45
   threshold: 4
   stone: {fileID: 1049526844}
 --- !u!114 &237936113
@@ -479,7 +479,6 @@ Transform:
   - {fileID: 292169431}
   - {fileID: 594178111}
   - {fileID: 1049526845}
-  - {fileID: 1601498748}
   - {fileID: 2118469461}
   m_Father: {fileID: 1101165900}
   m_RootOrder: 0
@@ -628,57 +627,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &1601498747
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 1601498748}
-  - component: {fileID: 1601498749}
-  m_Layer: 0
-  m_Name: QuadTreeNode
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!4 &1601498748
-Transform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1601498747}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 815743003}
-  m_RootOrder: 4
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1601498749
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1601498747}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: ff0acbf6ef5695e4fb7d672147309fdf, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  level: 0
-  status: 1
-  parent: {fileID: 0}
-  childs:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
 --- !u!1 &2051607033
 GameObject:
   m_ObjectHideFlags: 0
@@ -773,5 +721,5 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 815743003}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
