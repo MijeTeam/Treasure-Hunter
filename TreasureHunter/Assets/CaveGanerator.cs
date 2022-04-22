@@ -34,43 +34,42 @@ public class CaveGanerator : MonoBehaviour
     void Start()
     {
         PlaceGrid();
-        quadtree.StartQuadTree(cavePoints, trans_obj, 0, 0, width);
     }
 
     private void GenerateCave()
     {
-        cavePoints = new int[height, width]; // 가로 세로 길이만큼 CavePoint 생성
+        cavePoints = new int[width, height]; // 가로 세로 길이만큼 CavePoint 생성
 
         int seed = Random.Range(0, 1000000); // 랜덤 시드 생성 ( 완전 랜덤 )
         System.Random randChoice = new System.Random(seed.GetHashCode());
 
-        for (int y = 0; y < height; y++)
+        for (int x = 0; x < width; x++)
         {
-            for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
             {
                 if (x == 0 || y == 0 || x == width - 1 || y == height - 1) // 반복중, 맵의 각 가장자리에서..
                 {
                     // 각 모서리의 끝 변을 살아있는 생물로 잡음
-                    cavePoints[y, x] = 1; // cavePoints를 1로 잡음
+                    cavePoints[x, y] = 1; // cavePoints를 1로 잡음
                 }
                 else if (randChoice.Next(0, 100) < randFillPercent) // 또한..
                 {
                     // 퍼센테이지에 따라 살아있는 생물을 더 만듬
-                    cavePoints[y, x] = 1;
+                    cavePoints[x, y] = 1;
                 }
                 else
                 {
                     // 그게 아니라면.. 아무런 생물도 없음
-                    cavePoints[y, x] = 0;
+                    cavePoints[x, y] = 0;
                 }
             }
         }
 
         for (int i = 0; i < smoothCycles; i++) // 알고리즘 반복 횟수
         {
-            for (int y = 0; y < height; y++)
+            for (int x = 0; x < width; x++)
             {
-                for (int x = 0; x < width; x++)
+                for (int y = 0; y < height; y++)
                 {
                     int neighboringWalls = GetNeighbors(x, y); // 이웃의 벽 개수를 가져옴
 
@@ -78,12 +77,12 @@ public class CaveGanerator : MonoBehaviour
                     if (neighboringWalls > threshold)
                     {
                         // 난 살아있다!
-                        cavePoints[y, x] = (int)E_TILEALIVE.ALIVE;
+                        cavePoints[x, y] = (int)E_TILEALIVE.ALIVE;
                     }
                     else if (neighboringWalls < threshold)
                     {
                         // 이웃의 벽이 목표치보다 적으면 죽음
-                        cavePoints[y, x] = (int)E_TILEALIVE.DEAD;
+                        cavePoints[x, y] = (int)E_TILEALIVE.DEAD;
                     }
                 }
             }
@@ -94,15 +93,15 @@ public class CaveGanerator : MonoBehaviour
     {
         int wallNeighbors = 0;
 
-        for (int y = pointY - 1; y <= pointY + 1; y++)
+        for (int x = pointX - 1; x <= pointX + 1; x++)
         {
-            for (int x = pointX - 1; x <= pointX + 1; x++)
+            for (int y = pointY - 1; y <= pointY + 1; y++)
             {
                 if (x >= 0 && x < width && y >= 0 && y < height)
                 {
                     if (x != pointX || y != pointY)
                     {
-                        if (cavePoints[y, x] == (int)E_TILEALIVE.ALIVE)
+                        if (cavePoints[x, y] == (int)E_TILEALIVE.ALIVE)
                         {
                             wallNeighbors++;
                         }
@@ -119,31 +118,23 @@ public class CaveGanerator : MonoBehaviour
 
     private void PlaceGrid()
     {
-        for (int y = 0; y < height; y++)
+        for (int x = 0; x < width; x++)
         {
-            for (int x = 0; x < width; x++)
+            for (int y = 0; y < height; y++)
             {
                 GameObject kObj = Instantiate(stone, new Vector2(x, y), Quaternion.identity, trans_obj);
                 kObj.name = $"{x},{y}";
-                kObj.GetComponent<SpriteRenderer>().color = cavePoints[y, x] == (int)E_TILEALIVE.ALIVE ? Color.white : Color.black;
+                kObj.GetComponent<SpriteRenderer>().color = cavePoints[x, y] == (int)E_TILEALIVE.ALIVE ? Color.white : Color.black;
             }
         }
+        quadtree.StartQuadTree(cavePoints, trans_obj, 0, 0, width);
     }
 
 
     ///
     public void Update()
     {
-       //if (Input.GetKeyDown(KeyCode.Escape))
-       //    TransitionFade.Inst.SceneLoad("MainScene");
 
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            for (int i = 0; i < trans_obj.childCount; i++)
-                Destroy(trans_obj.GetChild(i).gameObject);
-            GenerateCave();
-            PlaceGrid();
-        }
     }
     ///
 }

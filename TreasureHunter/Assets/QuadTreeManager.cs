@@ -61,14 +61,14 @@ public class QuadTreeManager : MonoBehaviour
         node.startPos.y = startY;
 
         bool isCombined = true; // 병합 가능한가?
-        int startStatus = points[startY, startX]; // 제일 처음 시작하는 곳을 기준으로 잡음
-        for(int y = startY; y < startY + size; y++)
+        int startStatus = points[startX, startY]; // 제일 처음 시작하는 곳을 기준으로 잡음
+        for(int x = startX; x < startX + size; x++)
         {
-            for(int x = startX; x < startX + size; x++)
+            for(int y = startY; y < startY + size; y++)
             {
                 // 제일 처음으로 시작하는 곳을 기준으로 잡고,
                 // 검사 부위만큼 쭉 돌았을때 전부 같은지 체크.
-                if(points[y, x] != startStatus)
+                if(points[x, y] != startStatus)
                 {
                     // 다른 불순물이 섞여있으면 병합 불가능
                     isCombined = false;
@@ -81,12 +81,16 @@ public class QuadTreeManager : MonoBehaviour
 
         if (isCombined) // 병합 가능할 경우
         {
-            for (int y = startY; y < startY + size; y++)
+            for (int x = startX; x < startX + size; x++)
             {
-                for (int x = startX; x < startX + size; x++)
+                for (int y = startY; y < startY + size; y++)
                 {
-                    if (points[y, x] == (int)E_TILEALIVE.DEAD)
-                        node.objList.Add(trans_stones.GetChild((y * mapSize) + x).gameObject);
+                    if (points[x, y] == (int)E_TILEALIVE.DEAD)
+                    {
+                        // Hierachy의 Child는 1차원 형태로 배치되므로
+                        // x,y값을 이용해서 몇번째 자식인지 구함
+                        node.objList.Add(trans_stones.GetChild((x * mapSize) + y).gameObject);
+                    }
                 }
             }
             return startStatus == (int)E_TILEALIVE.ALIVE ? E_NODESTATUS.COMBINED_ALIVE : E_NODESTATUS.COMBINED_DEAD;
@@ -108,20 +112,15 @@ public class QuadTreeManager : MonoBehaviour
         return E_NODESTATUS.NOT_COMBINED;
     }
 
-    public void GetTile()
-    {
-        QuadTreeNode node = new QuadTreeNode();
-        SearchNodeFromWorldPosition(player.transform.position, rootNode, ref node);
-
-        for(int i = 0; i < node.objList.Count; i++)
-        {
-            node.objList[i].GetComponent<SpriteRenderer>().color = Color.green;
-        }
-        Debug.Log("Search Done!");
-    }
-
+    /// <summary>
+    /// WorldPosition에 위치해있는 좌표를 기반으로 QuadTreeNode를 꺼내주는 함수
+    /// </summary>
+    /// <param name="target">WorldPosition의 위치</param>
+    /// <param name="node">탐색할 범위의 QuadTreeNode</param>
+    /// <param name="finalNode">최종적으로 WorldPosition과 가장 인접한 QuadTreeNode</param>
     public void SearchNodeFromWorldPosition(Vector2 target, QuadTreeNode node, ref QuadTreeNode finalNode)
     {
+        // childCount == 0 이라는 조건을 사용해도 되지만, switch로 한번에 정렬함과 동시에
         // 자식이 존재할 수 없을 때, ( 더이상 나눌 수 없을 때 ) 정해지는 COMBINED_DEAD의 status 성질을 이용하여 제작되었습니다.
         switch (node.status)
         {
@@ -130,6 +129,8 @@ public class QuadTreeManager : MonoBehaviour
                 for(int i = 0; i < node.childs.Length; i++)
                 {
                     // 플레이어의 위치가 있는 분할 노드에 접근
+                    // ± 0.5f 를 해주는 이유는 박스의 중앙점에서 시작을 하기 때문, 따라서 정확한 영역 내의 플레이어를 구분 해 내려면
+                    // 추가로 한 타일의 절반 크기만큼 더하고 빼주어야 한다.
                     if(node.childs[i].startPos.x - 0.5f <= target.x && target.x <= node.childs[i].startPos.x + GetSizebyLevel(node.level) + 0.5f &&
                        node.childs[i].startPos.y - 0.5f <= target.y && target.y <= node.childs[i].startPos.y + GetSizebyLevel(node.level) + 0.5f)
                     {
@@ -141,13 +142,27 @@ public class QuadTreeManager : MonoBehaviour
             // ▼ 벽으로 막혀있는 곳이면 무조건 제외
             case E_NODESTATUS.COMBINED_ALIVE: return;
 
-            // 만약 노드의 최소 단위까지 내려갔으면
+            // 만약 노드의 최소 단위까지 내려갔으면 ( 더이상 쪼개지지않고, 자식이 없는 녀석일 경우 )
             case E_NODESTATUS.COMBINED_DEAD:
                 finalNode = node; 
                 break; // 플레이어가 있는 최소 노드임을 인정하고 FINAL_NODE 에 넣어줌
         }
     }
 
+    // ▼ Player의 위치를 잘 찾는지 테스트용
+    public void GetTile()
+    {
+        QuadTreeNode node = new QuadTreeNode();
+        SearchNodeFromWorldPosition(player.transform.position, rootNode, ref node);
+
+        for (int i = 0; i < node.objList.Count; i++)
+        {
+            node.objList[i].GetComponent<SpriteRenderer>().color = Color.green;
+        }
+        Debug.Log("Search Done!");
+    }
+
+    // ▼ QuadTreeNode가 가지고 있는 level에 따라서 해당 노드가 가지고있는 크기 범위 ( size ) 를 반환해주는 함수
     public int GetSizebyLevel(int level)
     {
         return mapSize / ((level + 1) * 2);
