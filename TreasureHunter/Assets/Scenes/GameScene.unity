@@ -216,6 +216,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   qtMNG: {fileID: 237936113}
+  maxSpeed: 6
+  fowardAngle: 0
 --- !u!1 &237936110
 GameObject:
   m_ObjectHideFlags: 0
