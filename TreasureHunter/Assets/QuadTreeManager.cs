@@ -27,7 +27,11 @@ public class QuadTreeManager : MonoBehaviour
     [SerializeField] GameObject player;
     QuadTreeNode rootNode = new QuadTreeNode();
 
-    int mapSize;
+    int mapSize; // 쿼드트리로 나눌때, 맵의 총 가로/세로길이를 담는 변수
+
+    [Header("[ Search Level Setting ]")]
+    [Range(0, 4)]
+    [SerializeField] int maxLevel; // 플레이어 주변 지형 탐색시, 최대로 들어갈 레벨 수
 
     /// <summary>
     /// 쿼드 트리를 이용해서 정보를 다듬고 구분해주는 함수
@@ -60,6 +64,19 @@ public class QuadTreeManager : MonoBehaviour
         node.startPos.x = startX;
         node.startPos.y = startY;
 
+        for (int x = startX; x < startX + size; x++)
+        {
+            for (int y = startY; y < startY + size; y++)
+            {
+                if (points[x, y] == (int)E_TILEALIVE.DEAD)
+                {
+                    // Hierachy의 Child는 1차원 형태로 배치되므로
+                    // x,y값을 이용해서 몇번째 자식인지 구함
+                    node.objList.Add(trans_stones.GetChild((x * mapSize) + y).gameObject);
+                }
+            }
+        }
+
         bool isCombined = true; // 병합 가능한가?
         int startStatus = points[startX, startY]; // 제일 처음 시작하는 곳을 기준으로 잡음
         for(int x = startX; x < startX + size; x++)
@@ -68,12 +85,13 @@ public class QuadTreeManager : MonoBehaviour
             {
                 // 제일 처음으로 시작하는 곳을 기준으로 잡고,
                 // 검사 부위만큼 쭉 돌았을때 전부 같은지 체크.
-                if(points[x, y] != startStatus)
+                if (points[x, y] != startStatus)
                 {
                     // 다른 불순물이 섞여있으면 병합 불가능
                     isCombined = false;
                     break;
                 }
+                
             }
             if (isCombined == false)
                 break;
@@ -81,18 +99,6 @@ public class QuadTreeManager : MonoBehaviour
 
         if (isCombined) // 병합 가능할 경우
         {
-            for (int x = startX; x < startX + size; x++)
-            {
-                for (int y = startY; y < startY + size; y++)
-                {
-                    if (points[x, y] == (int)E_TILEALIVE.DEAD)
-                    {
-                        // Hierachy의 Child는 1차원 형태로 배치되므로
-                        // x,y값을 이용해서 몇번째 자식인지 구함
-                        node.objList.Add(trans_stones.GetChild((x * mapSize) + y).gameObject);
-                    }
-                }
-            }
             return startStatus == (int)E_TILEALIVE.ALIVE ? E_NODESTATUS.COMBINED_ALIVE : E_NODESTATUS.COMBINED_DEAD;
         }
 
@@ -125,7 +131,18 @@ public class QuadTreeManager : MonoBehaviour
         switch (node.status)
         {
             // ▼ 4갈래로 갈라진 노드면 플레이어 위치 계산
-            case E_NODESTATUS.NOT_COMBINED: 
+            case E_NODESTATUS.NOT_COMBINED:
+
+                // 만약 이 노드가 Max Level만큼 검색된 노드라면
+                if(node.level >= maxLevel)
+                {
+                    // 나는 현재 분할된 노드중 일부일 뿐이니
+                    // 나랑 똑같은 레벨의 객체가 4개가 있다는 뜻이고, 따라서
+                    // Max level 이 초과된 경우 부모의 노드를 돌려주면 된다.
+                    finalNode = node.parent; // 바로 이 노드 안에 플레이어가 있다고 간주함
+                    break;
+                }
+
                 for(int i = 0; i < node.childs.Length; i++)
                 {
                     // 플레이어의 위치가 있는 분할 노드에 접근
@@ -142,9 +159,9 @@ public class QuadTreeManager : MonoBehaviour
             // ▼ 벽으로 막혀있는 곳이면 무조건 제외
             case E_NODESTATUS.COMBINED_ALIVE: return;
 
-            // 만약 노드의 최소 단위까지 내려갔으면 ( 더이상 쪼개지지않고, 자식이 없는 녀석일 경우 )
+            // 만약 찾을 수 있는 노드의 최소 단위까지 내려갔으면 ( 더이상 쪼개지지않고, 자식이 없는 녀석일 경우 )
             case E_NODESTATUS.COMBINED_DEAD:
-                finalNode = node; 
+                finalNode = node;
                 break; // 플레이어가 있는 최소 노드임을 인정하고 FINAL_NODE 에 넣어줌
         }
     }

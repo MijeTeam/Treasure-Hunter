@@ -262,8 +262,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   quadtree: {fileID: 237936113}
   trans_obj: {fileID: 292169431}
-  width: 64
-  height: 64
+  width: 80
+  height: 80
   smoothCycles: 6
   randFillPercent: 45
   threshold: 4
@@ -281,6 +281,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 21669632}
+  maxLevel: 4
 --- !u!1 &292169430
 GameObject:
   m_ObjectHideFlags: 0
