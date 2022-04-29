@@ -68,7 +68,7 @@ public class QuadTreeManager : MonoBehaviour
         {
             for (int y = startY; y < startY + size; y++)
             {
-                if (points[x, y] == (int)E_TILEALIVE.DEAD)
+                if (points[x, y] == (int)E_TILETYPE.FLOOR)
                 {
                     // Hierachy의 Child는 1차원 형태로 배치되므로
                     // x,y값을 이용해서 몇번째 자식인지 구함
@@ -99,7 +99,7 @@ public class QuadTreeManager : MonoBehaviour
 
         if (isCombined) // 병합 가능할 경우
         {
-            return startStatus == (int)E_TILEALIVE.ALIVE ? E_NODESTATUS.COMBINED_ALIVE : E_NODESTATUS.COMBINED_DEAD;
+            return startStatus == (int)E_TILETYPE.WALL ? E_NODESTATUS.COMBINED_ALIVE : E_NODESTATUS.COMBINED_DEAD;
         }
 
         // 아닐경우 4분할

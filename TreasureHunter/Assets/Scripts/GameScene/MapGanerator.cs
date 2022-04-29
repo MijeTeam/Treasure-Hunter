@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum E_TILEALIVE
+public enum E_TILETYPE
 {
-    DEAD = 0,
-    ALIVE = 1
+    FLOOR = 0,
+    WALL = 1
 }
 
 public class MapGanerator : MonoBehaviour
@@ -26,9 +26,15 @@ public class MapGanerator : MonoBehaviour
 
     public GameObject stone;
 
+    // FillIsland전용 변수들
+    bool[,] mapEntered; // Fill 전용
+    // 각 Island들 저장용
+    List<List<Vector2>> islands;
+
     private void Awake()
     {
         GenerateMap();
+        FillIsland();
     }
 
     void Start()
@@ -77,12 +83,12 @@ public class MapGanerator : MonoBehaviour
                     if (neighboringWalls > threshold)
                     {
                         // 난 살아있다!
-                        mapPoints[x, y] = (int)E_TILEALIVE.ALIVE;
+                        mapPoints[x, y] = (int)E_TILETYPE.WALL;
                     }
                     else if (neighboringWalls < threshold)
                     {
                         // 이웃의 벽이 목표치보다 적으면 죽음
-                        mapPoints[x, y] = (int)E_TILEALIVE.DEAD;
+                        mapPoints[x, y] = (int)E_TILETYPE.FLOOR;
                     }
                 }
             }
@@ -101,7 +107,7 @@ public class MapGanerator : MonoBehaviour
                 {
                     if (x != pointX || y != pointY)
                     {
-                        if (mapPoints[x, y] == (int)E_TILEALIVE.ALIVE)
+                        if (mapPoints[x, y] == (int)E_TILETYPE.WALL)
                         {
                             wallNeighbors++;
                         }
@@ -124,12 +130,78 @@ public class MapGanerator : MonoBehaviour
             {
                 GameObject kObj = Instantiate(stone, new Vector2(x, y), Quaternion.identity, trans_obj);
                 kObj.name = $"{x},{y}";
-                kObj.GetComponent<SpriteRenderer>().color = mapPoints[x, y] == (int)E_TILEALIVE.ALIVE ? Color.white : Color.black;
+                kObj.GetComponent<SpriteRenderer>().color = mapPoints[x, y] == (int)E_TILETYPE.WALL ? Color.white : Color.black;
             }
         }
         quadtree.StartQuadTree(mapPoints, trans_obj, 0, 0, width);
     }
 
+    /// <summary>
+    /// 벽이 아닌 곳에 좌표를 하나 찍어서 맵을 한번 쫙 돈다.
+    /// 돌면서 n번째 Island : {좌표들} 형식으로 저장한다.
+    /// 다 돌았다면, 가장 큰 Island를 제외한 나머지 Island들은 모두 벽으로 만들어버린다.
+    /// </summary>
+    private void FillIsland()
+    {
+        mapEntered = new bool[width, height];
+        islands = new List<List<Vector2>>();
+        int index = 0;
+        int maxIslandSize = 0;
+        for (int i = 0; i < width; ++i)
+        {
+            for (int j = 0; j < height; ++j)
+            {
+                // 진입하지 않았으면서 동시에 FLOOR이라면?
+                if (mapEntered[i, j] == false && mapPoints[i, j] == (int)E_TILETYPE.FLOOR)
+                {
+                    // FloodFill 시작
+                    islands.Add(new List<Vector2>());
+                    FloodFill(index, i, j);
+                    if (maxIslandSize < islands[index].Count)
+                        maxIslandSize = islands[index].Count;
+                    ++index;
+                }
+            }
+        }
+
+        // 다 채웠다면? Island 크기 비교
+        for (int i = 0; i < islands.Count; ++i)
+        {
+            if (maxIslandSize > islands[i].Count)
+            {
+                for (int j = 0; j < islands[i].Count; ++j)
+                {
+                    mapPoints[(int)islands[i][j].x, (int)islands[i][j].y] = (int)E_TILETYPE.WALL;
+                }
+            }
+        }
+    }
+
+    private void FloodFill(int index, int x, int y)
+    {
+        if (x >= width)
+            return;
+        if (y >= height)
+            return;
+        if (x < 0)
+            return;
+        if (y < 0)
+            return;
+
+        if (mapEntered[x, y] == true)
+            return;
+
+        if (mapPoints[x, y] == (int)E_TILETYPE.WALL)
+            return;
+
+        islands[index].Add(new Vector2(x, y));
+        mapEntered[x, y] = true;
+
+        FloodFill(index, x + 1, y);
+        FloodFill(index, x - 1, y);
+        FloodFill(index, x, y + 1);
+        FloodFill(index, x, y - 1);
+    }
 
     ///
     public void Update()
