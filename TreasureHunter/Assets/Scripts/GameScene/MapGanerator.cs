@@ -8,7 +8,7 @@ public enum E_TILEALIVE
     ALIVE = 1
 }
 
-public class CaveGanerator : MonoBehaviour
+public class MapGanerator : MonoBehaviour
 {
     [SerializeField] QuadTreeManager quadtree;
     [SerializeField] Transform trans_obj;
@@ -17,7 +17,7 @@ public class CaveGanerator : MonoBehaviour
     public int height; // 세로길이
     public int smoothCycles; // 다듬어주는 횟수
 
-    public int[,] cavePoints; // cavePoints가 1이면 살아있는 객체, 0이면 죽어있는 객체
+    public int[,] mapPoints; // cavePoints가 1이면 살아있는 객체, 0이면 죽어있는 객체
 
     [Range(0, 100)]
     public int randFillPercent; // 벽 생성률
@@ -28,7 +28,7 @@ public class CaveGanerator : MonoBehaviour
 
     private void Awake()
     {
-        GenerateCave();
+        GenerateMap();
     }
 
     void Start()
@@ -36,9 +36,9 @@ public class CaveGanerator : MonoBehaviour
         PlaceGrid();
     }
 
-    private void GenerateCave()
+    private void GenerateMap()
     {
-        cavePoints = new int[width, height]; // 가로 세로 길이만큼 CavePoint 생성
+        mapPoints = new int[width, height]; // 가로 세로 길이만큼 CavePoint 생성
 
         int seed = Random.Range(0, 1000000); // 랜덤 시드 생성 ( 완전 랜덤 )
         System.Random randChoice = new System.Random(seed.GetHashCode());
@@ -50,17 +50,17 @@ public class CaveGanerator : MonoBehaviour
                 if (x == 0 || y == 0 || x == width - 1 || y == height - 1) // 반복중, 맵의 각 가장자리에서..
                 {
                     // 각 모서리의 끝 변을 살아있는 생물로 잡음
-                    cavePoints[x, y] = 1; // cavePoints를 1로 잡음
+                    mapPoints[x, y] = 1; // cavePoints를 1로 잡음
                 }
                 else if (randChoice.Next(0, 100) < randFillPercent) // 또한..
                 {
                     // 퍼센테이지에 따라 살아있는 생물을 더 만듬
-                    cavePoints[x, y] = 1;
+                    mapPoints[x, y] = 1;
                 }
                 else
                 {
                     // 그게 아니라면.. 아무런 생물도 없음
-                    cavePoints[x, y] = 0;
+                    mapPoints[x, y] = 0;
                 }
             }
         }
@@ -77,12 +77,12 @@ public class CaveGanerator : MonoBehaviour
                     if (neighboringWalls > threshold)
                     {
                         // 난 살아있다!
-                        cavePoints[x, y] = (int)E_TILEALIVE.ALIVE;
+                        mapPoints[x, y] = (int)E_TILEALIVE.ALIVE;
                     }
                     else if (neighboringWalls < threshold)
                     {
                         // 이웃의 벽이 목표치보다 적으면 죽음
-                        cavePoints[x, y] = (int)E_TILEALIVE.DEAD;
+                        mapPoints[x, y] = (int)E_TILEALIVE.DEAD;
                     }
                 }
             }
@@ -101,7 +101,7 @@ public class CaveGanerator : MonoBehaviour
                 {
                     if (x != pointX || y != pointY)
                     {
-                        if (cavePoints[x, y] == (int)E_TILEALIVE.ALIVE)
+                        if (mapPoints[x, y] == (int)E_TILEALIVE.ALIVE)
                         {
                             wallNeighbors++;
                         }
@@ -124,10 +124,10 @@ public class CaveGanerator : MonoBehaviour
             {
                 GameObject kObj = Instantiate(stone, new Vector2(x, y), Quaternion.identity, trans_obj);
                 kObj.name = $"{x},{y}";
-                kObj.GetComponent<SpriteRenderer>().color = cavePoints[x, y] == (int)E_TILEALIVE.ALIVE ? Color.white : Color.black;
+                kObj.GetComponent<SpriteRenderer>().color = mapPoints[x, y] == (int)E_TILEALIVE.ALIVE ? Color.white : Color.black;
             }
         }
-        quadtree.StartQuadTree(cavePoints, trans_obj, 0, 0, width);
+        quadtree.StartQuadTree(mapPoints, trans_obj, 0, 0, width);
     }
 
 
